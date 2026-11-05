@@ -66,8 +66,20 @@ run_updates() {
 
 enable_firewall() {
     echo "character specific text"
-    ufw enable
+    sudo apt-get install ufw
+    sudo ufw enable
+    sudo ufw status
+}
+
+# NOTE: CHECK PORTS REQUIRED IN README AND MAKE SURE THAT 
+disabling_ports() {
+  echo "character specific text"
+  echo "disabling ports i hope you checked before running the script LOL"
+  for port in $20 $21 $23 $135 $411 $412; do
+    sudo kill -9 $(sudo lsof -t -i"$port")
+  done
 }
 
 run_updates
 enable_firewall
+disabling_ports
