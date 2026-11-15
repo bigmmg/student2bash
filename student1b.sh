@@ -114,4 +114,3 @@ disabling_ports() {
 
 run_updates
 enable_firewall
-#disabling_ports
