@@ -65,7 +65,7 @@ check_sources_debian() {
 }
 
 check_sources_mint() {
-  cat -n /etc/apt/sources.list.d/official-packages-repositories.listS
+  cat -n /etc/apt/sources.list.d/official-packages-repositories.lists
 }
 
 # NOTE: RUN THIS COMMAND IF SOURCES THAT PULL FROM INTERNET ARE NOT WORKING
@@ -93,7 +93,7 @@ update_sources_debian12() {
 #checks version of mint using grep and updates the source file with the CORRECT repository for that version
 
 run_malware_scan () {
-  sudo apt-get install clamav
+  sudo apt-get install clamav -y
   sudo systemctl stop clamav-freshclam
   sudo freshclam
   sudo systemctl start clamav-freshclam
@@ -101,12 +101,12 @@ run_malware_scan () {
 }
 
 run_updates() {
-    sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade
+    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y
 }
 
 enable_firewall() {
     echo "character specific text"
-    sudo apt-get install ufw
+    sudo apt-get install ufw -y
     sudo ufw enable
     sudo ufw status
 }
@@ -115,8 +115,11 @@ enable_firewall() {
 disabling_ports() {
   echo "character specific text"
   echo "disabling ports i hope you checked before running the script LOL"
-  for port in $20 $21 $23 $135 $411 $412; do
-    sudo kill -9 $(sudo lsof -t -i"$port")
+  for port in 20 21 23 135 411 412; do
+    pids=$(sudo lsof -t -i:"$port")
+    if [ -n "$pids" ]; then
+      sudo kill -9 $pids
+    fi
   done
 }
 
@@ -129,18 +132,12 @@ echo "[5]: enable firewall"
 echo "[6]: disable ports"
 read -p "Enter your choice (1-6): " choice
 
-if $choice -eq 1; then
-    check_sources_debian
-elif $choice -eq 2; then
-    update_sources_debian12
-elif $choice -eq 3; then
-    run_malware_scan
-elif $choice -eq 4; then
-    run_updates
-elif $choice -eq 5; then
-    enable_firewall
-elif $choice -eq 6; then
-    disabling_ports
-else
-    echo "Invalid choice. Please select a number between 1 and 6."
-fi
+case "$choice" in
+    1) check_sources_debian ;;
+    2) update_sources_debian12 ;;
+    3) run_malware_scan ;;
+    4) run_updates ;;
+    5) enable_firewall ;;
+    6) disabling_ports ;;
+    *) echo "Bad choice." ;;
+esac
