@@ -92,6 +92,14 @@ update_sources_debian12() {
 #the thing is that mint 21 has both diff sources and diff versions (21.0, 21.1, 21.2, etc) so i need to make a script that both
 #checks version of mint using grep and updates the source file with the CORRECT repository for that version
 
+run_malware_scan () {
+  sudo apt-get install clamav
+  sudo systemctl stop clamav-freshclam
+  sudo freshclam
+  sudo systemctl start clamav-freshclam
+  sudo clamscan -r -i /home /tmp /var/tmp
+}
+
 run_updates() {
     sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade
 }
@@ -112,5 +120,27 @@ disabling_ports() {
   done
 }
 
-run_updates
-enable_firewall
+echo "hi welcome to script"
+echo "[1]: check sources (debian 12 only)"
+echo "[2]: update sources (debian 12 only)"
+echo "[3]: run malware scan"
+echo "[4]: run updates"
+echo "[5]: enable firewall"
+echo "[6]: disable ports"
+read -p "Enter your choice (1-6): " choice
+
+if $choice -eq 1; then
+    check_sources_debian
+elif $choice -eq 2; then
+    update_sources_debian12
+elif $choice -eq 3; then
+    run_malware_scan
+elif $choice -eq 4; then
+    run_updates
+elif $choice -eq 5; then
+    enable_firewall
+elif $choice -eq 6; then
+    disabling_ports
+else
+    echo "Invalid choice. Please select a number between 1 and 6."
+fi
