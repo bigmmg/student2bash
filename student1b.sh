@@ -92,7 +92,14 @@ update_sources_debian12() {
 #the thing is that mint 21 has both diff sources and diff versions (21.0, 21.1, 21.2, etc) so i need to make a script that both
 #checks version of mint using grep and updates the source file with the CORRECT repository for that version
 
-run_malware_scan () {
+locate_unrequired_files() {
+  sudo updatedb
+  EXTENSIONS="mp3|mp4|avi|mov"
+
+  sudo locate -i --regex "\.($EXTENSIONS)$"
+}
+
+run_malware_scan() {
   sudo apt-get install clamav -y
   sudo systemctl stop clamav-freshclam
   sudo freshclam
@@ -130,7 +137,8 @@ echo "[3]: run malware scan"
 echo "[4]: run updates"
 echo "[5]: enable firewall"
 echo "[6]: disable ports"
-read -p "Enter your choice (1-6): " choice
+echo "[7]: locate unrequired files"
+read -p "Enter your choice (1-7): " choice
 
 case "$choice" in
     1) check_sources_debian ;;
