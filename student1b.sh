@@ -147,5 +147,6 @@ case "$choice" in
     4) run_updates ;;
     5) enable_firewall ;;
     6) disabling_ports ;;
+    7) locate_unrequired_files ;;
     *) echo "Bad choice." ;;
 esac
